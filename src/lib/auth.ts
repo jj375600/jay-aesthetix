@@ -34,7 +34,7 @@ export function sessionCookieOptions() {
 
 /** Returns the logged-in user (fresh from the DB) or null. */
 export async function getUser(): Promise<SessionUser | null> {
-  const token = cookies().get(COOKIE)?.value;
+  const token = (await cookies()).get(COOKIE)?.value;
   if (!token) return null;
   try {
     const { payload } = await jwtVerify(token, secret());

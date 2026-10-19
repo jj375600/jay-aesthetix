@@ -11,9 +11,9 @@ import { SITE } from "@/lib/site";
 
 export const metadata = { title: `Client · ${SITE.name}` };
 
-export default async function ClientDetail({ params }: { params: { id: string } }) {
+export default async function ClientDetail({ params }: { params: Promise<{ id: string }> }) {
   await requireUser("trainer");
-  const id = Number(params.id);
+  const id = Number((await params).id);
   if (!Number.isInteger(id)) notFound();
 
   const client = await queryOne<{

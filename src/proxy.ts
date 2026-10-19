@@ -5,7 +5,7 @@ import { jwtVerify } from "jose";
 // the user and role themselves (defense in depth).
 const PROTECTED = ["/dashboard", "/onboarding", "/book", "/progress", "/invoices", "/clients", "/availability"];
 
-export async function middleware(req: NextRequest) {
+export async function proxy(req: NextRequest) {
   const { pathname } = req.nextUrl;
   if (!PROTECTED.some((p) => pathname === p || pathname.startsWith(p + "/"))) return NextResponse.next();
 

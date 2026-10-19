@@ -6,13 +6,14 @@ import { SITE } from "@/lib/site";
 
 type Row = { id: number; trainer_id: number; client_id: number; session_date: string; start_time: string; status: string };
 
-export async function PATCH(req: Request, { params }: { params: { id: string } }) {
+export async function PATCH(req: Request, { params }: { params: Promise<{ id: string }> }) {
+  const { id: idParam } = await params;
   const [user, authErr] = await authed();
   if (authErr) return authErr;
   const [d, err] = await parse(req, sessionPatchSchema);
   if (err) return err;
 
-  const s = await queryOne<Row>("SELECT id, trainer_id, client_id, session_date, start_time, status FROM sessions WHERE id = $1", [Number(params.id)]);
+  const s = await queryOne<Row>("SELECT id, trainer_id, client_id, session_date, start_time, status FROM sessions WHERE id = $1", [Number(idParam)]);
   if (!s) return fail("Session not found", 404);
 
   const owns = user!.role === "trainer" ? s.trainer_id === user!.id : s.client_id === user!.id;

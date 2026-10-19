@@ -12,9 +12,10 @@ import { SITE } from "@/lib/site";
 
 export const metadata = { title: `Dashboard · ${SITE.name}` };
 
-export default async function DashboardPage({ searchParams }: { searchParams: { booked?: string } }) {
+export default async function DashboardPage({ searchParams }: { searchParams: Promise<{ booked?: string }> }) {
+  const { booked } = await searchParams;
   const user = await requireUser();
-  return user.role === "trainer" ? <TrainerDashboard user={user} /> : <ClientDashboard user={user} justBooked={searchParams.booked === "1"} />;
+  return user.role === "trainer" ? <TrainerDashboard user={user} /> : <ClientDashboard user={user} justBooked={booked === "1"} />;
 }
 
 /* ------------------------------ CLIENT ------------------------------ */
