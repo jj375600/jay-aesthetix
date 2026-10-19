@@ -4,6 +4,14 @@ A full-stack web app for an independent personal trainer: a public marketing sit
 login-protected portal where **clients** onboard, book sessions, and track progress, and the
 **trainer** manages availability, clients, and invoices.
 
+![Landing page](docs/screenshots/landing.png)
+
+![Trainer dashboard](docs/screenshots/dashboard.png)
+
+![Client portal](docs/screenshots/client-portal.png)
+
+![Booking page](docs/screenshots/booking.png)
+
 > **Portfolio concept project.** All clients, sessions, invoices, and prices are sample data, and
 > payments are simulated. Set `NEXT_PUBLIC_DEMO_MODE=false` to hide the demo disclaimers.
 
