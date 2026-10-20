@@ -15,7 +15,7 @@ login-protected portal where **clients** onboard, book sessions, and track progr
 > **Portfolio concept project.** All clients, sessions, invoices, and prices are sample data, and
 > payments are simulated. Set `NEXT_PUBLIC_DEMO_MODE=false` to hide the demo disclaimers.
 
-**Stack:** Next.js 14 (App Router) · TypeScript · PostgreSQL (`pg`) · JWT cookie auth (`jose`, `bcryptjs`) · Zod · Recharts
+**Stack:** Next.js 16 (App Router) · React 19 · TypeScript · PostgreSQL (`pg`) · JWT cookie auth (`jose`, `bcryptjs`) · Zod · Recharts · Vercel + Neon
 
 ## Testing & CI
 
