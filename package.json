@@ -10,7 +10,8 @@
     "db:setup": "node --env-file=.env.local scripts/db-setup.mjs",
     "db:reset": "node --env-file=.env.local scripts/db-setup.mjs --reset",
     "typecheck": "tsc --noEmit",
-    "test": "node --test tests/*.test.mjs"
+    "test": "node --test tests/*.test.mjs",
+    "start:test": "STRIPE_SECRET_KEY=sk_test_ci_mock STRIPE_WEBHOOK_SECRET=whsec_ci_mock STRIPE_API_BASE=http://localhost:4010 next start"
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",

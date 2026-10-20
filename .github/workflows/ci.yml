@@ -47,7 +47,7 @@ jobs:
 
       - name: Start the app
         run: |
-          npm start &
+          npm run start:test &
           for i in $(seq 1 30); do
             curl -sf http://localhost:3000/login > /dev/null && exit 0
             sleep 2
