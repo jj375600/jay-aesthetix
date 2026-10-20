@@ -17,6 +17,17 @@ login-protected portal where **clients** onboard, book sessions, and track progr
 
 **Stack:** Next.js 14 (App Router) · TypeScript · PostgreSQL (`pg`) · JWT cookie auth (`jose`, `bcryptjs`) · Zod · Recharts
 
+## Testing & CI
+
+![CI](https://github.com/jj375600/jay-aesthetix/actions/workflows/ci.yml/badge.svg)
+
+Integration tests (`npm test`) run against the real app and database, covering:
+- Authentication: HttpOnly cookies and no account enumeration
+- Role-based access: clients can't reach trainer endpoints or other clients' data
+- Concurrency: 8 simultaneous bookings of one slot produce exactly one booking and seven 409s
+
+GitHub Actions runs typecheck, build, tests and a dependency audit on every push and pull request.
+
 ## Features
 
 | Area | What it does |
