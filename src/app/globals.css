@@ -189,3 +189,5 @@ input:focus, select:focus, textarea:focus { outline: none; border-color: var(--o
   html { scroll-behavior: auto; }
   .btn { transition: none; }
 }
+.badge.logged { color: var(--warn); border-color: #6a5320; background: rgba(251,191,36,.08); }
+.badge.failed { color: var(--bad); border-color: #6a2b33; background: rgba(248,113,113,.08); }

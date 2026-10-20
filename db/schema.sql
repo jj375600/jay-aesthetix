@@ -97,3 +97,19 @@ CREATE TABLE IF NOT EXISTS login_attempts (
 );
 CREATE INDEX IF NOT EXISTS login_attempts_email_idx ON login_attempts (email, created_at);
 CREATE INDEX IF NOT EXISTS login_attempts_ip_idx ON login_attempts (ip, created_at);
+
+-- Every email the app sends (confirmations, cancellations). Shown to the trainer on the Email log page,
+-- so the feature is visible even when no real email provider is configured. See src/lib/email.ts.
+CREATE TABLE IF NOT EXISTS email_log (
+  id         BIGSERIAL PRIMARY KEY,
+  to_email   TEXT NOT NULL,
+  subject    TEXT NOT NULL,
+  body       TEXT NOT NULL,
+  kind       TEXT NOT NULL,
+  status     TEXT NOT NULL CHECK (status IN ('logged', 'sent', 'failed')),
+  error      TEXT,
+  session_id INTEGER,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+CREATE INDEX IF NOT EXISTS email_log_created_idx ON email_log (created_at DESC);
+CREATE INDEX IF NOT EXISTS email_log_session_idx ON email_log (session_id);
