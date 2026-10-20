@@ -28,7 +28,7 @@ export function studioLocalToUtc(date: string, time: string, timeZone = SITE.stu
 const stamp = (d: Date) => d.toISOString().replace(/[-:]/g, "").replace(/\.\d{3}/, ""); // 20261022T210000Z
 
 /** Escapes text values: backslash, semicolon, comma and line breaks have special meaning in .ics. */
-const esc = (s: string) => s.replace(/\\/g, "\\\\").replace(/;/g, "\;").replace(/,/g, "\\,").replace(/\r?\n/g, "\\n");
+const esc = (s: string) => s.replace(/\\/g, "\\\\").replace(/;/g, "\\;").replace(/,/g, "\\,").replace(/\r?\n/g, "\\n");
 
 /** Lines may be at most 75 bytes; longer ones continue on the next line starting with a space. */
 function fold(line: string) {
