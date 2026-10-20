@@ -1,0 +1,60 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: jay
+          POSTGRES_PASSWORD: jay
+          POSTGRES_DB: jay_aesthetix
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U jay"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+
+    env:
+      DATABASE_URL: postgres://jay:jay@localhost:5432/jay_aesthetix
+      AUTH_SECRET: ci-only-secret-not-used-anywhere-else-0123456789
+      NEXT_PUBLIC_DEMO_MODE: "true"
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+      - run: npm run typecheck
+
+      - name: Create tables and demo data
+        run: node scripts/db-setup.mjs
+
+      - run: npm run build
+
+      - name: Start the app
+        run: |
+          npm start &
+          for i in $(seq 1 30); do
+            curl -sf http://localhost:3000/login > /dev/null && exit 0
+            sleep 2
+          done
+          echo "App did not start" && exit 1
+
+      - run: npm test
+
+      - name: Dependency audit
+        run: npm audit --audit-level=high
