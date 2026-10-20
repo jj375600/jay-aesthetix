@@ -8,7 +8,7 @@ import { SITE } from "./site";
 // Sending must never break the action that triggered it (a booking still succeeds if email is down),
 // so sendEmail never throws.
 
-export type EmailKind = "booking_confirmation" | "booking_alert" | "cancellation";
+export type EmailKind = "booking_confirmation" | "booking_alert" | "cancellation" | "payment_receipt" | "payment_alert";
 export type OutgoingEmail = { to: string; subject: string; text: string; kind: EmailKind; sessionId?: number };
 
 let tableReady: Promise<unknown> | null = null;

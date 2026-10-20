@@ -23,6 +23,7 @@ the address on my GitHub profile. Please don't open a public issue for a securit
 | 8 | **Double-booking races** | A partial unique index in Postgres makes two active sessions for the same trainer/date/time impossible, even under concurrent requests. | `db/schema.sql`, tests |
 | 9 | **Clickjacking, MIME sniffing, XSS impact** | `X-Frame-Options: DENY`, `frame-ancestors 'none'`, `X-Content-Type-Options: nosniff`, a Content-Security-Policy that limits where scripts, styles, fonts and images may load from, `Referrer-Policy`, `Permissions-Policy` and HSTS. | `next.config.mjs` |
 | 10 | **Vulnerable dependencies** | Dependabot opens weekly update PRs; CI runs `npm audit` on every push; CodeQL scans the code for known vulnerability patterns. | `.github/` |
+| 11 | **Payment tampering / fake "paid" events** | Card details are typed into Stripe's hosted page and never reach this server. Payment confirmations are accepted only if the webhook signature is valid (HMAC-SHA256 with a timing-safe compare and a 5-minute replay window), or if the session is re-fetched from Stripe itself. The charged amount and currency must equal the invoice. Marking paid is idempotent, so retried events send one receipt. Live Stripe keys are refused, so the demo can never charge real money. | `src/lib/stripe.ts`, `api/stripe/webhook`, tests |
 
 Every row marked with "tests" is checked automatically on every push (`npm test`), including a test
 that proves the protections fail loudly when removed.
@@ -44,5 +45,7 @@ that proves the protections fail loudly when removed.
   could register with another person's email and trigger a booking or cancellation email to it. Emails
   are only sent on those actions, never in bulk, and real delivery is off unless a provider key is
   configured (the public demo only *logs* emails). A production system would verify addresses first.
+- **Payments run in Stripe test mode only.** There is no refund flow, partial payment, receipt PDF or dispute
+  handling, and live keys are deliberately rejected.
 - **Demo credentials are public on purpose** and the data is fictional. Real deployments must set a
   strong `AUTH_SECRET`, turn off `NEXT_PUBLIC_DEMO_MODE`, and never reuse these passwords.
