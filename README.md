@@ -4,6 +4,9 @@ A full-stack web app for an independent personal trainer: a public marketing sit
 login-protected portal where **clients** onboard, book sessions, and track progress, and the
 **trainer** manages availability, clients, and invoices.
 
+**Live demo:** https://jay-aesthetix.vercel.app/
+Sample logins (demo data only): client `maya@example.test` / trainer `jay@jayaesthetix.test`, password `demo1234`.
+
 ![Landing page](docs/screenshots/landing.png)
 
 ![Trainer dashboard](docs/screenshots/dashboard.png)
