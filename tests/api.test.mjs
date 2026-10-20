@@ -9,11 +9,11 @@ import assert from "node:assert/strict";
 const BASE = process.env.BASE_URL ?? "http://localhost:3000";
 const PASSWORD = "demo1234";
 
-async function call(path, { method = "GET", cookie, body } = {}) {
+async function call(path, { method = "GET", cookie, body, headers = {} } = {}) {
   const res = await fetch(BASE + path, {
     method,
     redirect: "manual",
-    headers: { ...(cookie ? { cookie } : {}), ...(body ? { "content-type": "application/json" } : {}) },
+    headers: { ...(cookie ? { cookie } : {}), ...(body ? { "content-type": "application/json" } : {}), ...headers },
     body: body ? JSON.stringify(body) : undefined,
   });
   let data = null;
@@ -25,8 +25,17 @@ async function call(path, { method = "GET", cookie, body } = {}) {
   return { status: res.status, data, headers: res.headers };
 }
 
+// Each login comes from a made-up IP so the login rate limiter (see security.test.mjs) never sees the
+// whole test run as one client.
+const rnd = () => Math.floor(Math.random() * 256);
+const randomIp = () => `10.${rnd()}.${rnd()}.${rnd()}`;
+
 async function login(email, password = PASSWORD) {
-  const res = await call("/api/auth/login", { method: "POST", body: { email, password } });
+  const res = await call("/api/auth/login", {
+    method: "POST",
+    body: { email, password },
+    headers: { "x-forwarded-for": randomIp() },
+  });
   const cookie = res.headers.getSetCookie().map((c) => c.split(";")[0]).join("; ");
   return { ...res, cookie };
 }
@@ -63,7 +72,8 @@ describe("authentication", () => {
 
   test("wrong password and unknown email return the same 401 (no account enumeration)", async () => {
     const wrongPassword = await login("maya@example.test", "not-the-password");
-    const unknownEmail = await login("nobody@example.test", "not-the-password");
+    // A fresh unknown email each run, so repeated runs never trip the login lockout for it.
+    const unknownEmail = await login(`nobody-${Math.random().toString(36).slice(2)}@example.test`, "not-the-password");
     assert.equal(wrongPassword.status, 401);
     assert.equal(unknownEmail.status, 401);
     assert.deepEqual(wrongPassword.data, unknownEmail.data);
