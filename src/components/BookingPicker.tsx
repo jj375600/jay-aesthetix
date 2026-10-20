@@ -55,7 +55,7 @@ export function BookingPicker({ slots }: { slots: Slot[] }) {
 
       {dates.map((d) => (
         <div className="day-col" key={d}>
-          <h3>{fmtDate(d)}</h3>
+          <h2>{fmtDate(d)}</h2>
           <div className="slots">
             {byDate[d].map((t) => (
               <button
