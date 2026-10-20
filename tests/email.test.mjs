@@ -140,7 +140,16 @@ describe("email log access", () => {
     assert.match(anon.headers.get("location") ?? "", /\/login/);
 
     const asClient = await call("/emails", { cookie: maya });
-    assert.ok([302, 303, 307, 308].includes(asClient.status), `client got ${asClient.status}`);
+    // With a loading skeleton the page streams, so the redirect may arrive as 200 + an in-page
+    // NEXT_REDIRECT instead of a 307. Either way the client must be sent away and see no log.
+    const clientBody = await asClient.text();
+    if ([302, 303, 307, 308].includes(asClient.status)) {
+      assert.ok(true);
+    } else {
+      assert.equal(asClient.status, 200);
+      assert.match(clientBody, /NEXT_REDIRECT/, "client was not redirected");
+      assert.doesNotMatch(clientBody, /<table/, "email log table leaked to a client");
+    }
 
     const asTrainer = await call("/emails", { cookie: await getTrainer() });
     assert.equal(asTrainer.status, 200);

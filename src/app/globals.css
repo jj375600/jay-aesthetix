@@ -166,7 +166,7 @@ input:focus, select:focus, textarea:focus { outline: none; border-color: var(--o
 
 /* Booking */
 .day-col { margin-bottom: 18px; }
-.day-col h3 { font-size: 1.2rem; margin-bottom: 8px; }
+.day-col h2 { font-size: 1.2rem; margin-bottom: 8px; }
 .slots { display: flex; flex-wrap: wrap; gap: 8px; }
 .slot { padding: 9px 14px; border-radius: 10px; border: 1px solid var(--line); background: #0a1128; color: var(--text); font: 600 .95rem var(--font-body); cursor: pointer; }
 .slot:hover { border-color: var(--silver); }
@@ -191,3 +191,10 @@ input:focus, select:focus, textarea:focus { outline: none; border-color: var(--o
 }
 .badge.logged { color: var(--warn); border-color: #6a5320; background: rgba(251,191,36,.08); }
 .badge.failed { color: var(--bad); border-color: #6a2b33; background: rgba(248,113,113,.08); }
+
+/* Accessibility: links inside running text must not rely on colour alone. */
+.link-u { text-decoration: underline; text-underline-offset: 3px; }
+.state-box { max-width: 520px; margin: 12vh auto; text-align: center; }
+.skeleton { background: linear-gradient(90deg, rgba(255,255,255,.04), rgba(255,255,255,.09), rgba(255,255,255,.04)); background-size: 200% 100%; animation: sk 1.4s ease-in-out infinite; border-radius: 10px; }
+@keyframes sk { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
+@media (prefers-reduced-motion: reduce) { .skeleton { animation: none; } }

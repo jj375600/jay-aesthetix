@@ -55,9 +55,9 @@ export function AuthForm({ mode }: { mode: "login" | "register" }) {
       </form>
       <p className="muted" style={{ marginTop: 16, marginBottom: 0 }}>
         {mode === "login" ? (
-          <>New here? <Link href="/register" className="accent">Create an account</Link></>
+          <>New here? <Link href="/register" className="accent link-u">Create an account</Link></>
         ) : (
-          <>Already a client? <Link href="/login" className="accent">Log in</Link></>
+          <>Already a client? <Link href="/login" className="accent link-u">Log in</Link></>
         )}
       </p>
     </div>

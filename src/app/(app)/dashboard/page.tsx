@@ -67,7 +67,7 @@ async function ClientDashboard({ user, justBooked }: { user: SessionUser; justBo
         ) : (
           <div className="table-wrap">
             <table>
-              <thead><tr><th>Date</th><th>Time</th><th>Focus</th><th /></tr></thead>
+              <thead><tr><th>Date</th><th>Time</th><th>Focus</th><th><span className="sr-only">Actions</span></th></tr></thead>
               <tbody>
                 {upcoming.map((s) => (
                   <tr key={s.id}>
@@ -161,7 +161,7 @@ async function TrainerDashboard({ user }: { user: SessionUser }) {
           {sessions.length === 0 ? <div className="empty">Nothing booked yet.</div> : (
             <div className="table-wrap">
               <table>
-                <thead><tr><th>Date</th><th>Time</th><th>Client</th><th /></tr></thead>
+                <thead><tr><th>Date</th><th>Time</th><th>Client</th><th><span className="sr-only">Actions</span></th></tr></thead>
                 <tbody>
                   {sessions.map((s) => (
                     <tr key={s.id}>

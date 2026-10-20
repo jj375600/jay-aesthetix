@@ -70,7 +70,7 @@ export default async function InvoicesPage({ searchParams }: { searchParams: Pro
           {rows.length === 0 ? <div className="empty">No invoices yet.</div> : (
             <div className="table-wrap">
               <table>
-                <thead><tr><th>#</th>{isTrainer && <th>Client</th>}<th>Description</th><th>Due</th><th>Status</th><th className="num">Amount</th>{(isTrainer || payEnabled) && <th />}</tr></thead>
+                <thead><tr><th>#</th>{isTrainer && <th>Client</th>}<th>Description</th><th>Due</th><th>Status</th><th className="num">Amount</th>{(isTrainer || payEnabled) && <th><span className="sr-only">Actions</span></th>}</tr></thead>
                 <tbody>
                   {rows.map((r) => (
                     <tr key={r.id}>

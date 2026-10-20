@@ -36,7 +36,7 @@ export default function Home() {
             </div>
             <div className="hero-photo">
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src="/img/portrait.jpg" alt={`${SITE.trainerName}, your personal trainer, smiling in the gym`} />
+              <img src="/img/portrait.jpg" width={1100} height={1100} decoding="async" alt={`${SITE.trainerName}, your personal trainer, smiling in the gym`} />
               <div className="hero-badge">
                 <strong>Train with {SITE.trainerName}</strong>
                 Independent personal trainer
@@ -86,7 +86,7 @@ export default function Home() {
         <section id="about" className="section">
           <div className="container about-grid">
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img className="about-logo" src="/img/logo.png" alt={`${SITE.name} logo`} />
+            <img className="about-logo" src="/img/logo.png" width={615} height={615} loading="lazy" decoding="async" alt={`${SITE.name} logo`} />
             <div>
               <p className="eyebrow">About</p>
               <h2>Coaching that fits real life</h2>
