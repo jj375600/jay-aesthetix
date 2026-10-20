@@ -58,7 +58,7 @@ Supporting tables: `login_attempts` (failed logins, for rate limiting) and `emai
 
 ![CI](https://github.com/jj375600/jay-aesthetix/actions/workflows/ci.yml/badge.svg)
 
-42 integration tests (`npm test`) run against the real app and database, covering:
+51 integration tests (`npm test`) run against the real app and database, covering:
 - **Authentication:** HttpOnly cookies, and no account enumeration
 - **Role-based access:** clients can't reach trainer endpoints or other clients' data
 - **Concurrency:** 8 simultaneous bookings of one slot produce exactly one booking and seven `409`s
@@ -66,6 +66,7 @@ Supporting tables: `login_attempts` (failed logins, for rate limiting) and `emai
 - **Security headers and CSRF:** hardening headers on every response, and cross-site API requests refused
 - **Calendar export:** the downloaded `.ics` time is converted back to the studio's clock and checked
 - **Email notifications:** booking and cancellation emails go to the right people
+- **Accessibility and error states:** labelled forms, alt text and image dimensions, no colour-only links, and a friendly 404
 - **Stripe payments:** checkout creation, webhook signature verification, replay protection, amount matching and idempotency, against a fake Stripe server
 
 GitHub Actions runs typecheck, build, the tests and a dependency audit on every push and pull request,
@@ -73,6 +74,12 @@ CodeQL scans the code, and Dependabot opens weekly update PRs.
 
 To run them locally: `npm run build && npm run start:test` in one terminal, then `npm test` in another.
 (`start:test` points the app at a fake Stripe server so the payment tests can run. With a plain `npm start` those tests are skipped.)
+
+## Accessibility & performance
+
+Every page, as both a client and the trainer, was checked with axe-core (WCAG 2.1 AA) and reports **0 violations**.
+Lighthouse scores (production build, measured locally): **Accessibility 100**, **SEO 100**, **Performance 93-100**, **Best Practices 92-96**.
+The app also has loading skeletons, a recoverable error page and a custom 404.
 
 ## Security
 
@@ -176,7 +183,7 @@ src/lib/                db pool, auth, slot engine, validators, rate limiting, c
 src/app/api/            REST route handlers
 src/app/(app)/          authenticated pages (dashboard, book, progress, invoices, clients, availability, emails)
 src/components/         client components (wizard, booking picker, charts, forms)
-tests/                  integration tests (auth, access control, booking races, security, calendar, email, payments)
+tests/                  integration tests (auth, access control, booking races, security, calendar, email, payments, accessibility)
 .github/                CI, CodeQL and Dependabot configuration
 SECURITY.md             threat model and known limitations
 ```
