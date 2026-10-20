@@ -25,6 +25,9 @@ export function SessionActions({ id, role, canComplete }: { id: number; role: "t
   return (
     <div>
       <div className="row-actions">
+        {!canComplete && (
+          <a className="btn btn-ghost btn-sm" href={`/api/sessions/${id}/calendar`} download>Add to calendar</a>
+        )}
         {role === "trainer" && canComplete && (
           <button className="btn btn-ghost btn-sm" disabled={busy} onClick={() => act("completed")}>Complete</button>
         )}
