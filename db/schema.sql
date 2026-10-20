@@ -87,3 +87,13 @@ CREATE TABLE IF NOT EXISTS invoices (
   created_at    TIMESTAMPTZ NOT NULL DEFAULT now()
 );
 CREATE INDEX IF NOT EXISTS invoices_client_idx ON invoices (client_id);
+
+-- Failed logins, used to throttle brute-force guessing (see src/lib/rate-limit.ts).
+CREATE TABLE IF NOT EXISTS login_attempts (
+  id         BIGSERIAL PRIMARY KEY,
+  email      TEXT NOT NULL,
+  ip         TEXT NOT NULL,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+CREATE INDEX IF NOT EXISTS login_attempts_email_idx ON login_attempts (email, created_at);
+CREATE INDEX IF NOT EXISTS login_attempts_ip_idx ON login_attempts (ip, created_at);
