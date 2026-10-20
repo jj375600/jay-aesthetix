@@ -9,7 +9,8 @@
     "start": "next start",
     "db:setup": "node --env-file=.env.local scripts/db-setup.mjs",
     "db:reset": "node --env-file=.env.local scripts/db-setup.mjs --reset",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "test": "node --test tests/*.test.mjs"
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",
