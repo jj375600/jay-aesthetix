@@ -33,6 +33,7 @@ flowchart LR
   PG --> L
   L -->|"parameterised SQL (pg)"| DB[("PostgreSQL on Neon")]
   L -.->|"optional"| R["Resend (email delivery)"]
+  L -.->|"test mode"| S["Stripe Checkout + webhook"]
   GH["GitHub"] -->|"push to main"| V["Vercel<br/>build + deploy"]
   GH --> CI["GitHub Actions<br/>typecheck, build, tests, npm audit, CodeQL"]
   V --> P
@@ -57,7 +58,7 @@ Supporting tables: `login_attempts` (failed logins, for rate limiting) and `emai
 
 ![CI](https://github.com/jj375600/jay-aesthetix/actions/workflows/ci.yml/badge.svg)
 
-32 integration tests (`npm test`) run against the real app and database, covering:
+42 integration tests (`npm test`) run against the real app and database, covering:
 - **Authentication:** HttpOnly cookies, and no account enumeration
 - **Role-based access:** clients can't reach trainer endpoints or other clients' data
 - **Concurrency:** 8 simultaneous bookings of one slot produce exactly one booking and seven `409`s
@@ -65,11 +66,13 @@ Supporting tables: `login_attempts` (failed logins, for rate limiting) and `emai
 - **Security headers and CSRF:** hardening headers on every response, and cross-site API requests refused
 - **Calendar export:** the downloaded `.ics` time is converted back to the studio's clock and checked
 - **Email notifications:** booking and cancellation emails go to the right people
+- **Stripe payments:** checkout creation, webhook signature verification, replay protection, amount matching and idempotency, against a fake Stripe server
 
 GitHub Actions runs typecheck, build, the tests and a dependency audit on every push and pull request,
 CodeQL scans the code, and Dependabot opens weekly update PRs.
 
-To run them locally: `npm run build && npm start` in one terminal, then `npm test` in another.
+To run them locally: `npm run build && npm run start:test` in one terminal, then `npm test` in another.
+(`start:test` points the app at a fake Stripe server so the payment tests can run. With a plain `npm start` those tests are skipped.)
 
 ## Security
 
@@ -87,6 +90,7 @@ checks, parameterised SQL, role checks on every route, and a written threat mode
 | Session booking | Trainer sets weekly availability. Clients see open 60-minute slots for 14 days and can book or cancel (12-hour cancellation window) |
 | Calendar export | "Add to calendar" downloads an `.ics` file for any booked session (Apple, Google or Outlook), with the correct time zone and a 1-hour reminder |
 | Email notifications | Booking confirmations, new-booking alerts and cancellation notices. Delivered through Resend when a key is set, and always recorded in the trainer's Email log |
+| Online payments | Clients pay invoices with **Stripe Checkout in test mode** (card `4242 4242 4242 4242`). Confirmed by a signature-verified webhook and by re-checking with Stripe on return. No card data touches the server |
 | Progress analytics | Log weight, body fat, bench/squat/deadlift. Recharts line charts for body composition and strength |
 | Invoice tracking | Trainer creates invoices, marks them paid or void. Overdue status is computed. Revenue chart and outstanding totals |
 | Trainer dashboard | KPIs, upcoming sessions, sessions needing close-out, overdue invoices, new leads, 6-month paid revenue |
@@ -157,6 +161,8 @@ from small client components, followed by `router.refresh()`.
 | PATCH | `/api/sessions/:id` | owner | Cancel (client, 12h rule) or cancel/complete (trainer) |
 | GET | `/api/sessions/:id/calendar` | owner | Download the session as an `.ics` calendar file |
 | GET | `/api/emails?sessionId=` | trainer | The email log, newest first |
+| POST | `/api/invoices/:id/checkout` | client (owner) | Start a Stripe Checkout payment for an unpaid invoice |
+| POST | `/api/stripe/webhook` | Stripe (signature) | Mark an invoice paid when Stripe confirms payment |
 | GET / POST | `/api/progress` | any user | Own entries / add a check-in (trainer can add for a client) |
 | GET / POST | `/api/invoices` | any user / trainer | List own invoices / create one |
 | PATCH | `/api/invoices/:id` | trainer | Mark paid, void, or reopen |
@@ -166,11 +172,11 @@ from small client components, followed by `router.refresh()`.
 ```
 db/schema.sql           tables, constraints, double-booking index
 scripts/db-setup.mjs    migrate + seed (demo data)
-src/lib/                db pool, auth, slot engine, validators, rate limiting, calendar (.ics), email
+src/lib/                db pool, auth, slot engine, validators, rate limiting, calendar (.ics), email, Stripe
 src/app/api/            REST route handlers
 src/app/(app)/          authenticated pages (dashboard, book, progress, invoices, clients, availability, emails)
 src/components/         client components (wizard, booking picker, charts, forms)
-tests/                  integration tests (auth, access control, booking races, security, calendar, email)
+tests/                  integration tests (auth, access control, booking races, security, calendar, email, payments)
 .github/                CI, CodeQL and Dependabot configuration
 SECURITY.md             threat model and known limitations
 ```
@@ -182,7 +188,8 @@ Branding, prices, FAQ and credentials all live in `src/lib/site.ts`. Edit them t
 1. Create a Postgres database (Neon, Supabase, Railway, or Render all work).
 2. Push the repo to GitHub and import it into **Vercel**.
 3. Set `DATABASE_URL`, `AUTH_SECRET`, and `NEXT_PUBLIC_DEMO_MODE` in the project's environment variables.
-   Optional: `RESEND_API_KEY` and `EMAIL_FROM` to deliver real emails (otherwise they are only logged).
+   Optional: `RESEND_API_KEY` and `EMAIL_FROM` to deliver real emails (otherwise they are only logged), and
+   `STRIPE_SECRET_KEY` (a `sk_test_` key) plus `STRIPE_WEBHOOK_SECRET` to enable test-mode invoice payments.
 4. Create the tables once from your machine: `DATABASE_URL="<prod url>" node scripts/db-setup.mjs`.
    Note that this also seeds the **demo accounts with a known password**. For anything real, delete those
    users or skip the seed section. (The `login_attempts` and `email_log` tables create themselves on first use.)
@@ -190,7 +197,7 @@ Branding, prices, FAQ and credentials all live in `src/lib/site.ts`. Edit them t
 ## Known limitations / next steps
 
 - No password reset or email verification.
-- Payments are tracked, not processed (Stripe Checkout would be the natural next step).
+- Payments use Stripe **test mode** only (live keys are refused). No refunds, receipts PDFs or partial payments.
 - Health screening data is collected for demo purposes. A real deployment needs a privacy policy and
   appropriate handling of sensitive health information.
 - Trainer-side booking for a client exists in the API but has no UI yet.
