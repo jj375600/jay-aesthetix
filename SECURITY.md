@@ -40,5 +40,9 @@ that proves the protections fail loudly when removed.
   deletes the cookie, but a copied token would stay valid until it expires.
 - **No email verification or password reset**, and registration reveals whether an email is taken
   (the usual trade-off for a friendly sign-up form).
+- **Emails go to whatever address an account was registered with, and addresses aren't verified.** Someone
+  could register with another person's email and trigger a booking or cancellation email to it. Emails
+  are only sent on those actions, never in bulk, and real delivery is off unless a provider key is
+  configured (the public demo only *logs* emails). A production system would verify addresses first.
 - **Demo credentials are public on purpose** and the data is fictional. Real deployments must set a
   strong `AUTH_SECRET`, turn off `NEXT_PUBLIC_DEMO_MODE`, and never reuse these passwords.

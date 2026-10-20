@@ -3,6 +3,7 @@ import { authed, fail, json, parse } from "@/lib/api";
 import { bookingSchema } from "@/lib/validators";
 import { getTrainerId, isSlotBookable } from "@/lib/slots";
 import { SITE } from "@/lib/site";
+import { notifyBooked } from "@/lib/notifications";
 
 export async function GET() {
   const [user, err] = await authed();
@@ -53,6 +54,7 @@ export async function POST(req: Request) {
     );
     // A lead becomes an active client the moment their first session is booked.
     await query("UPDATE client_profiles SET status = 'active' WHERE user_id = $1 AND status = 'lead'", [clientId]);
+    await notifyBooked(new URL(req.url).origin, row!.id, user!.role);
     return json({ ok: true, id: row!.id }, 201);
   } catch (e) {
     if ((e as { code?: string }).code === "23505") return fail("Someone just booked that time. Please pick another slot.", 409);

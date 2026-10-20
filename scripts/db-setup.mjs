@@ -29,7 +29,7 @@ const addDays = (d, n) => {
 try {
   if (reset) {
     await client.query(
-      "DROP TABLE IF EXISTS login_attempts, invoices, progress_entries, sessions, availability, client_profiles, users CASCADE"
+      "DROP TABLE IF EXISTS email_log, login_attempts, invoices, progress_entries, sessions, availability, client_profiles, users CASCADE"
     );
     console.log("Dropped existing tables.");
   }

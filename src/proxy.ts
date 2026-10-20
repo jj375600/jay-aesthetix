@@ -3,7 +3,7 @@ import { jwtVerify } from "jose";
 
 // Cheap first gate: no valid cookie -> /login. Pages and API routes still check
 // the user and role themselves (defense in depth).
-const PROTECTED = ["/dashboard", "/onboarding", "/book", "/progress", "/invoices", "/clients", "/availability"];
+const PROTECTED = ["/dashboard", "/onboarding", "/book", "/progress", "/invoices", "/clients", "/availability", "/emails"];
 
 function sameHost(origin: string, host: string | null) {
   try {
@@ -45,5 +45,5 @@ export async function proxy(req: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/api/:path*", "/dashboard/:path*", "/onboarding/:path*", "/book/:path*", "/progress/:path*", "/invoices/:path*", "/clients/:path*", "/availability/:path*"],
+  matcher: ["/api/:path*", "/dashboard/:path*", "/onboarding/:path*", "/book/:path*", "/progress/:path*", "/invoices/:path*", "/clients/:path*", "/availability/:path*", "/emails/:path*"],
 };

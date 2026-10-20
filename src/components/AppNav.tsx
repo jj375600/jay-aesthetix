@@ -11,6 +11,7 @@ const LINKS = {
     ["/clients", "Clients"],
     ["/availability", "Availability"],
     ["/invoices", "Invoices"],
+    ["/emails", "Emails"],
   ],
   client: [
     ["/dashboard", "Dashboard"],
