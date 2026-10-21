@@ -86,7 +86,7 @@ export default function Home() {
         <section id="about" className="section">
           <div className="container about-grid">
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img className="about-logo" src="/img/logo.png" width={615} height={615} loading="lazy" decoding="async" alt={`${SITE.name} logo`} />
+            <img className="about-logo" src="/img/logo.png" width={900} height={835} loading="lazy" decoding="async" alt={`${SITE.name} logo`} />
             <div>
               <p className="eyebrow">About</p>
               <h2>Coaching that fits real life</h2>

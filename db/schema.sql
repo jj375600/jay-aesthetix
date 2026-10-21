@@ -1,4 +1,4 @@
--- JAY_AESTHETIX schema (PostgreSQL)
+-- JAY-AESTHETIX schema (PostgreSQL)
 -- All session times are "studio local time" (one studio, one timezone), stored as
 -- a DATE + TIME pair. That keeps slot math simple and avoids timezone bugs.
 

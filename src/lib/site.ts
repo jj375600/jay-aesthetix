@@ -1,6 +1,6 @@
 // Everything you'd edit to rebrand or re-price the business lives here.
 export const SITE = {
-  name: "JAY_AESTHETIX",
+  name: "JAY-AESTHETIX",
   tagline: "Personal Training & Fitness",
   trainerName: "Jay",
   location: "Decatur, GA",
