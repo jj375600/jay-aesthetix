@@ -1,4 +1,4 @@
-# JAY_AESTHETIX: Independent Trainer Platform
+# JAY-AESTHETIX: Independent Trainer Platform
 
 A full-stack web app for an independent personal trainer: a public marketing site plus a
 login-protected portal where **clients** onboard, book sessions, and track progress, and the
