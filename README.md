@@ -7,7 +7,9 @@ login-protected portal where **clients** onboard, book sessions, and track progr
 **Live demo:** https://jay-aesthetix.vercel.app/
 Sample logins (demo data only): client `maya@example.test` / trainer `jay@jayaesthetix.test`, password `demo1234`.
 
-https://github.com/user-attachments/assets/99ee04b5-c5d3-485a-85b8-3554662856f6
+
+https://github.com/user-attachments/assets/f875ed1c-344f-4bbd-b453-0acdebdbd101
+
 
 ![Landing page](docs/screenshots/landing.png)
 
