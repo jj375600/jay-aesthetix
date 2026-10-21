@@ -2,7 +2,7 @@
   "name": "jay-aesthetix",
   "version": "1.0.0",
   "private": true,
-  "description": "JAY_AESTHETIX - full-stack client portal for an independent personal trainer (portfolio concept project)",
+  "description": "JAY-AESTHETIX - full-stack client portal for an independent personal trainer (portfolio concept project)",
   "scripts": {
     "dev": "next dev",
     "build": "next build",

@@ -1,6 +1,6 @@
 # Security
 
-JAY_AESTHETIX is a portfolio project with clearly fictional demo data, but it is built the way a real
+JAY-AESTHETIX is a portfolio project with clearly fictional demo data, but it is built the way a real
 client portal should be: it handles logins, personal health answers and payments-style invoices. This
 page explains what is protected, how, and what is deliberately *not* covered yet.
 
