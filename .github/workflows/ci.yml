@@ -26,6 +26,9 @@ jobs:
 
     env:
       DATABASE_URL: postgres://jay:jay@localhost:5432/jay_aesthetix
+      # The tests play the part of the text-message bot on this port (tests/nudge.test.mjs).
+      NUDGE_URL: http://localhost:4030
+      NUDGE_EVENTS_SECRET: ci-only-nudge-secret-0123456789abcdef
       AUTH_SECRET: ci-only-secret-not-used-anywhere-else-0123456789
       NEXT_PUBLIC_DEMO_MODE: "true"
 

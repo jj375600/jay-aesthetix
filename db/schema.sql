@@ -15,6 +15,8 @@ CREATE TABLE IF NOT EXISTS users (
 CREATE TABLE IF NOT EXISTS client_profiles (
   user_id        INTEGER PRIMARY KEY REFERENCES users(id) ON DELETE CASCADE,
   phone          TEXT,
+  sms_consent    BOOLEAN NOT NULL DEFAULT false,
+  sms_consent_at TIMESTAMPTZ,
   goal           TEXT NOT NULL,
   experience     TEXT NOT NULL CHECK (experience IN ('beginner', 'intermediate', 'advanced')),
   target_weight  NUMERIC(5,1),
@@ -27,6 +29,10 @@ CREATE TABLE IF NOT EXISTS client_profiles (
   status         TEXT NOT NULL DEFAULT 'active' CHECK (status IN ('lead', 'active', 'paused')),
   completed_at   TIMESTAMPTZ NOT NULL DEFAULT now()
 );
+
+-- For databases created before text-message check-ins existed.
+ALTER TABLE client_profiles ADD COLUMN IF NOT EXISTS sms_consent BOOLEAN NOT NULL DEFAULT false;
+ALTER TABLE client_profiles ADD COLUMN IF NOT EXISTS sms_consent_at TIMESTAMPTZ;
 
 -- The trainer's weekly availability blocks (0 = Sunday ... 6 = Saturday).
 CREATE TABLE IF NOT EXISTS availability (

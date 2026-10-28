@@ -4,6 +4,7 @@ import { sessionPatchSchema } from "@/lib/validators";
 import { hoursUntil } from "@/lib/slots";
 import { SITE } from "@/lib/site";
 import { notifyCancelled } from "@/lib/notifications";
+import { nudgeCancelled } from "@/lib/nudge";
 
 type Row = { id: number; trainer_id: number; client_id: number; session_date: string; start_time: string; status: string };
 
@@ -27,6 +28,6 @@ export async function PATCH(req: Request, { params }: { params: Promise<{ id: st
   }
 
   await query("UPDATE sessions SET status = $1, notes = COALESCE($2, notes) WHERE id = $3", [d.status, d.notes ?? null, s.id]);
-  if (d.status === "cancelled") await notifyCancelled(new URL(req.url).origin, s.id, user!.role);
+  if (d.status === "cancelled") await Promise.all([notifyCancelled(new URL(req.url).origin, s.id, user!.role), nudgeCancelled(s.id)]);
   return json({ ok: true });
 }
