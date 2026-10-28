@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { normalizePhone } from "./phone";
 
 const date = z.string().regex(/^\d{4}-\d{2}-\d{2}$/, "Use YYYY-MM-DD");
 const time = z.string().regex(/^\d{2}:\d{2}$/, "Use HH:MM");
@@ -16,6 +17,7 @@ export const loginSchema = z.object({
 
 export const onboardingSchema = z.object({
   phone: z.string().trim().max(30).optional().default(""),
+  smsConsent: z.boolean().optional().default(false),
   goal: z.string().trim().min(5, "Tell me a bit more about your goal").max(500),
   experience: z.enum(["beginner", "intermediate", "advanced"]),
   targetWeight: z.coerce.number().min(50).max(600).nullable().optional(),
@@ -25,6 +27,11 @@ export const onboardingSchema = z.object({
   sessionsPerWeek: z.coerce.number().int().min(1).max(7),
   preferredDays: z.array(z.enum(["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"])).min(1, "Pick at least one day"),
   preferredTime: z.enum(["morning", "afternoon", "evening", "any"]),
+}).superRefine((d, ctx) => {
+  // Texting someone needs a number we can actually text. Without the box ticked, the phone stays free text as before.
+  if (d.smsConsent && !normalizePhone(d.phone)) {
+    ctx.addIssue({ code: "custom", path: ["phone"], message: "Enter a valid mobile number to get text messages (US numbers work as 404-555-0123)" });
+  }
 });
 
 export const bookingSchema = z.object({

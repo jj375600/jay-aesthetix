@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 
 export type OnboardingData = {
   phone: string;
+  smsConsent: boolean;
   goal: string;
   experience: "beginner" | "intermediate" | "advanced";
   targetWeight: string;
@@ -39,6 +40,7 @@ export function OnboardingWizard({ initial }: { initial: OnboardingData }) {
 
   function validate(): string {
     if (step === 0 && data.goal.trim().length < 5) return "Tell me a bit more about your goal.";
+    if (step === 0 && data.smsConsent && data.phone.replace(/\D/g, "").length < 10) return "Add your mobile number so I can text you, or untick the text-message box.";
     if (step === 2 && data.preferredDays.length === 0) return "Pick at least one day that works for you.";
     return "";
   }
@@ -99,8 +101,17 @@ export function OnboardingWizard({ initial }: { initial: OnboardingData }) {
               </div>
               <div className="field">
                 <label htmlFor="phone">Phone (optional)</label>
-                <input id="phone" type="text" inputMode="tel" value={data.phone} onChange={(e) => set("phone", e.target.value)} />
+                <input id="phone" type="text" inputMode="tel" autoComplete="tel" value={data.phone} onChange={(e) => set("phone", e.target.value)} />
               </div>
+            </div>
+            <div className="field">
+              <label className="check" htmlFor="sms">
+                <input id="sms" type="checkbox" checked={data.smsConsent} onChange={(e) => set("smsConsent", e.target.checked)} />
+                <span>
+                  Text me session reminders and a daily workout check-in. Optional. Message frequency varies (about one a day).
+                  Msg &amp; data rates may apply. Reply STOP anytime to opt out, HELP for help.
+                </span>
+              </label>
             </div>
           </>
         )}

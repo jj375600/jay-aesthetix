@@ -8,13 +8,14 @@ export const metadata = { title: `Onboarding · ${SITE.name}` };
 export default async function OnboardingPage() {
   const user = await requireUser("client");
   const p = await queryOne<{
-    phone: string | null; goal: string; experience: OnboardingData["experience"]; target_weight: number | null;
+    phone: string | null; sms_consent: boolean; goal: string; experience: OnboardingData["experience"]; target_weight: number | null;
     injuries: string | null; medical_notes: string | null; par_q_flags: string[]; sessions_per_week: number;
     preferred_days: string[]; preferred_time: OnboardingData["preferredTime"];
   }>("SELECT * FROM client_profiles WHERE user_id = $1", [user.id]);
 
   const initial: OnboardingData = {
     phone: p?.phone ?? "",
+    smsConsent: p?.sms_consent ?? false,
     goal: p?.goal ?? "",
     experience: p?.experience ?? "beginner",
     targetWeight: p?.target_weight ? String(p.target_weight) : "",
