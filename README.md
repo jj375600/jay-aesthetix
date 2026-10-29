@@ -104,6 +104,16 @@ checks, parameterised SQL, role checks on every route, and a written threat mode
 | Invoice tracking | Trainer creates invoices, marks them paid or void. Overdue status is computed. Revenue chart and outstanding totals |
 | Trainer dashboard | KPIs, upcoming sessions, sessions needing close-out, overdue invoices, new leads, 6-month paid revenue |
 
+## Text-message reminders (optional)
+
+JAY-AESTHETIX can connect to [jay-nudge](https://github.com/jj375600/jay-nudge), a separate service that texts clients
+session reminders and a daily workout check-in.
+
+- Clients opt in with an optional checkbox during onboarding. Their number is validated and stored as E.164.
+- The site sends signed events (`client.opted_in`, `client.opted_out`, `session.booked`, `session.cancelled`) to the bot.
+  Only clients who opted in are ever reported.
+- The bot is optional. If it is down, slow or not configured, bookings work exactly as before.
+- To turn it on, set `NUDGE_URL` and `NUDGE_EVENTS_SECRET` (the same value as the bot's `EVENTS_SECRET`).
 
 ## Quick start
 
