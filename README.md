@@ -104,6 +104,14 @@ checks, parameterised SQL, role checks on every route, and a written threat mode
 | Invoice tracking | Trainer creates invoices, marks them paid or void. Overdue status is computed. Revenue chart and outstanding totals |
 | Trainer dashboard | KPIs, upcoming sessions, sessions needing close-out, overdue invoices, new leads, 6-month paid revenue |
 
+## Owner dashboard
+
+![Dashboard](docs/dashboard.png)
+
+Open `/admin` and enter your `ADMIN_TOKEN` to see each client's last 14 days (green worked out, blue rest day, red missed),
+their current and best streak, delivery counts, and the latest messages. It is read-only, shows only first names and the last four
+digits of a number, and the demo data in the picture is fictional (`npm run demo:seed` creates it on your own machine).
+
 ## Quick start
 
 Requires **Node 20.6+** and a PostgreSQL database.
